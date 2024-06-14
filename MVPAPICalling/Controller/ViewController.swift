@@ -8,7 +8,7 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, WordsPracticeView {
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneButton: UIButton!
@@ -26,12 +26,12 @@ class ViewController: UIViewController {
         self.tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "TableViewCell")
     }
     
-    
     @IBAction func doneButtonTapped(_ sender: UIButton) {
         guard let keyName = textField.text, !keyName.isEmpty else {
             showError("Please enter text")
             return
         }
+        presenter = WordsPracticePresenter(view: self)
         presenter.fetchWordsPracticeList(with: keyName)
     }
     
