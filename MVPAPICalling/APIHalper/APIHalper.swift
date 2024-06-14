@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-class APIHalper {
+class NetworkService {
     func getWordsPracticeList(keyName: String, completion: @escaping (Result<Welcome, Error>) -> Void) {
         let url = "http://stenoapp.gautamsteno.com/api/get_words_practise_list"
         let parameters: Parameters = [
@@ -18,12 +18,18 @@ class APIHalper {
         AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default).responseData { response in
             switch response.result {
             case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let welcome = try decoder.decode(Welcome.self, from: data)
-                    completion(.success(welcome))
-                } catch {
-                    completion(.failure(error))
+                DispatchQueue.global(qos: .background).async {
+                    do {
+                        let decoder = JSONDecoder()
+                        let welcome = try decoder.decode(Welcome.self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(welcome))
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                    }
                 }
             case .failure(let error):
                 completion(.failure(error))

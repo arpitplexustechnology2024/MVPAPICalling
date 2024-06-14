@@ -31,4 +31,3 @@ enum EXTPath: String, Codable {
     case pdf = "pdf"
     case mp4 = "mp4"
 }
-
